@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yuval's Shorts Viewer</title>
+</head>
+<body>
+    <header>
+        <h1>Latest Shorts</h1>
+    </header>
+
+    <main id="shorts-container"></main>
+
+    <script>
+    const API_KEY = 'AIzaSyA7E-zFiAjjIsUr1goooeLEEGRgP2jjyLU'; // Replace with your API key
+    const CHANNEL_HANDLE = '@yuvaliistaken';
+
+    async function getShorts() {
+        try {
+            // Get channel ID
+            const searchRes = await fetch(
+                `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${CHANNEL_HANDLE}&type=channel&key=${API_KEY}`
+            );
+            const channelId = (await searchRes.json()).items[0].id.channelId;
+
+            // Get uploads playlist
+            const channelRes = await fetch(
+                `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${channelId}&key=${API_KEY}`
+            );
+            const playlistId = (await channelRes.json()).items[0].contentDetails.relatedPlaylists.uploads;
+
+            // Get latest videos
+            const videosRes = await fetch(
+                `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=15&key=${API_KEY}`
+            );
+            const videos = (await videosRes.json()).items;
+
+            // Filter Shorts
+            const shorts = videos.filter(video => 
+                video.snippet.title.toLowerCase().includes('#short') ||
+                video.snippet.description.toLowerCase().includes('#short')
+            ).slice(0, 5);
+
+            // Display content
+            const container = document.getElementById('shorts-container');
+            container.innerHTML = shorts.map(short => `
+                <article>
+                    <h2>${short.snippet.title}</h2>
+                    <a href="https://youtu.be/${short.snippet.resourceId.videoId}">
+                        <img src="${short.snippet.thumbnails.medium.url}" 
+                             alt="${short.snippet.title}" 
+                             width="${short.snippet.thumbnails.medium.width}" 
+                             height="${short.snippet.thumbnails.medium.height}">
+                    </a>
+                    <p>Uploaded: ${new Date(short.snippet.publishedAt).toLocaleDateString()}</p>
+                </article>
+            `).join('');
+
+        } catch (error) {
+            document.getElementById('shorts-container').innerHTML = `
+                <p>Error loading shorts: ${error.message}</p>
+            `;
+        }
+    }
+
+    // Initialize
+    getShorts();
+    </script>
+</body>
+</html>
