@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>האורז המוקפצץ</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; direction: rtl; }
+    .en { display: none; direction: ltr; }
+    button { margin: 10px; padding: 5px 10px; }
+  </style>
+</head>
+<body>
+  <button onclick="toggleLang()">English / עברית</button>
+
+  <div class="he">
+    <h1>האורז המוקפצץ</h1>
+    <p>אורז מוקפץ הוא מאכל שמקורו בסין, שם הוכן לראשונה כדי לנצל אורז מבושל שנותר מהיום הקודם.</p>
+    <p>הוא כולל טיגון של אורז עם ירקות, ביצים, ולעיתים גם בשר או טופו, בתוספת רוטב סויה ותיבול אסייתי.</p>
+    <p>המאכל התפשט למדינות רבות באסיה ולמערב, וכיום נחשב לנפוץ ופופולרי במיוחד.</p>
+  </div>
+
+  <div class="en">
+    <h1>The Popped Rice</h1>
+    <p>Fried rice originated in China as a way to reuse leftover cooked rice from the previous day.</p>
+    <p>It is made by stir-frying rice with vegetables, eggs, and sometimes meat or tofu, flavored with soy sauce and Asian spices.</p>
+    <p>The dish spread throughout Asia and to the West, becoming a popular and versatile meal worldwide.</p>
+  </div>
+
+  <script>
+    function toggleLang() {
+      document.querySelector('.he').style.display =
+        document.querySelector('.he').style.display === 'none' ? 'block' : 'none';
+      document.querySelector('.en').style.display =
+        document.querySelector('.en').style.display === 'block' ? 'none' : 'block';
+    }
+  </script>
+</body>
+</html>
